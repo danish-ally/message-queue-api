@@ -1,0 +1,109 @@
+[
+    {
+        "send_url": "http://localhost:9000/api/pincode/check",
+        "payload": {
+            "pincode": "70001b7"
+        },
+        "method": "POST",
+        "ack_url": "http://localhost:3000",
+        "expectedOutput": [
+            {
+                "statusCode": 200,
+                "nestedApi": {
+                    "send_url": "http://localhost:9000/api/pincode/byId",
+                    "payload": {},
+                    "method": "GET",
+                    "ack_url": "http://localhost:3000",
+                    "expectedOutput": [
+                        {
+                            "statusCode": 200,
+                            "nestedApi": {
+                                "send_url": "http://localhost:3000/example2",
+                                "payload": {},
+                                "method": "GET",
+                                "ack_url": "http://localhost:3000"
+                            }
+                        },
+                        {
+                            "statusCode": 201,
+                            "nestedApi": {
+                                "send_url": "http://localhost:3000/example3",
+                                "payload": {},
+                                "method": "GET",
+                                "ack_url": "http://localhost:3000"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "statusCode": 400,
+                "nestedApi": {
+                    "send_url": "http://localhost:3000/example3",
+                    "payload": {},
+                    "method": "GET"
+                }
+            }
+        ]
+    },
+    {
+        "send_url": "https://mycourses.lawsikho.in/nuSource/api/v1/student/search?student_email=bidyabrddata@lawsikho.in",
+        "payload": {},
+        "method": "GET",
+        "ack_url": "http://localhost:3000",
+        "expectedOutput": [
+            {
+                "statusCode": 200,
+                "nestedApi": {
+                    "send_url": "http://localhost:3000/example1",
+                    "payload": {},
+                    "method": "POST",
+                    "ack_url": "http://localhost:3000",
+                    "expectedOutput": [
+                        {
+                            "statusCode": 200,
+                            "nestedApi": {
+                                "send_url": "http://localhost:3000/example2",
+                                "payload": {},
+                                "method": "GET",
+                                "ack_url": "http://localhost:3000",
+                                "getAttributeFromParentToChildPayload": [
+                                    {
+                                        "parentAttribute": "user_ids",
+                                        "parentType": "array",
+                                        "childAttribute": "user_id",
+                                        "childType": "string"
+                                    },
+                                    {
+                                        "parentAttribute": "code",
+                                        "parentType": "number",
+                                        "childAttribute": "code",
+                                        "childType": "number"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "statusCode": 201,
+                            "nestedApi": {
+                                "send_url": "http://localhost:3000/example3",
+                                "payload": {},
+                                "method": "GET",
+                                "ack_url": "http://localhost:3000"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "statusCode": 400,
+                "nestedApi": {
+                    "send_url": "http://localhost:3000/example3",
+                    "payload": {},
+                    "method": "GET",
+                    "ack_url": "http://localhost:3000"
+                }
+            }
+        ]
+    }
+]

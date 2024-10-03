@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  title: Message queue
+  description: Api documentation for message queue
+  version: 1.0.0
+servers:
+  - url: https://message-queue-development.lawsikho.dev
+  - url: http://localhost:3000  # Update with your server URL
+
+paths:
+  /api/pushToQueue:
+    post:
+      summary: Endpoint to push data to the queue
+      description: Pushes data to the RabbitMQ queue for processing
+      requestBody:
+        description: List of payloads to be pushed to the queue
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  send_url:
+                    type: string
+                    description: URL to send the request
+                  payload:
+                    type: object
+                    description: Request payload
+                  method:
+                    type: string
+                    enum: [GET, POST, PUT, DELETE]
+                    description: HTTP request method
+                  ack_url:
+                    type: string
+                    description: Acknowledgment URL (optional)
+      parameters:
+        - in: query
+          name: application
+          schema:
+            type: string
+          description: Name of the application
+      responses:
+        '200':
+          description: Data successfully pushed to the queue
+        '500':
+          description: Internal server error
+  /api/errorLog:
+    get:
+      summary: Get all error logs
+      description: Retrieve a list of all error logs with optional filtering and pagination
+      parameters:
+        - name: request_received_from
+          in: query
+          description: Filter logs by request_received_from value
+          schema:
+            type: string
+        - name: start_date
+          in: query
+          description: Filter logs with received_time greater than or equal to the start date
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: Filter logs with received_time less than or equal to the end date
+          schema:
+            type: string
+            format: date
+        - name: send_url
+          in: query
+          description: Filter logs by send_url value
+          schema:
+            type: string
+        - name: ack_url
+          in: query
+          description: Filter logs by ack_url value
+          schema:
+            type: string
+        - name: response_type
+          in: query
+          description: Filter logs by response_type value
+          schema:
+            type: string
+            enum: [success, error]
+        - name: ack_response_type
+          in: query
+          description: Filter logs by ack_response_type value
+          schema:
+            type: string
+            enum: [success, error]
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: perPage
+          in: query
+          description: Number of logs to display per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: search
+          in: query
+          description: Search on request_received_from and send_url
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of error logs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalLogs:
+                    type: integer
+                    description: Total number of error logs matching the query
+                  currentPage:
+                    type: integer
+                    description: Current page number
+                  perPage:
+                    type: integer
+                    description: Number of logs displayed per page
+                  logs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ErrorLog'
+        '500':
+          description: Internal server error
+
+    
+
